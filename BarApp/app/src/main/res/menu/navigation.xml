@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- C'est ici qu'il faudra ajouter, modifier ou supprimer des menus -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home" />
+    <!-- Chaque menu aura cette forme-ci
+        <item
+            android:id="@+id/navigation_NOM-DU-MENU"
+            android:icon="@drawable/ICONE_CORRESPONDANTE"
+            android:title="@string/LE_TITRE_DU_MENU" />
+    -->
 
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dashboard" />
+        android:id="@+id/navigation_accueil"
+        android:icon="@drawable/ic_accueil_black"
+        android:title="@string/title_accueil" />
 
     <item
-        android:id="@+id/navigation_notifications"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_notifications" />
+        android:id="@+id/navigation_paiement"
+        android:icon="@drawable/ic_paiement_black"
+        android:title="@string/title_paiement" />
+
+    <item
+        android:id="@+id/navigation_boisson"
+        android:icon="@drawable/ic_boisson_black"
+        android:title="@string/title_boisson" />
+
+    <item
+        android:id="@+id/navigation_team"
+        android:icon="@drawable/ic_team_black"
+        android:title="@string/title_team" />
 
 </menu>

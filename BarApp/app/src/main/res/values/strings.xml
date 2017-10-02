@@ -1,6 +1,15 @@
 <resources>
+    <!-- Chaines en rapport avec les généralités de l'appli -->
     <string name="app_name">BarApp</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+
+
+    <!-- Chaines en rapport avec l'interface graphique -->
+    <!-- BANDEAU DU HAUT -->
+    <string name="title_niveau">Niveau :</string>
+
+    <!-- BANDEAU DU BAS -->
+    <string name="title_accueil">Accueil</string>
+    <string name="title_paiement">Paiement</string>
+    <string name="title_boisson">Boissons</string>
+    <string name="title_team">Team</string>
 </resources>
