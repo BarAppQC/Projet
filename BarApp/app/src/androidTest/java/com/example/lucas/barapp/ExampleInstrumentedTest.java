@@ -4,8 +4,14 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import classes.Utilisateur;
 
 import static org.junit.Assert.*;
 
@@ -22,5 +28,12 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("com.example.lucas.barapp", appContext.getPackageName());
+    }
+
+
+    @Test
+    public void InsertUtilisateur() throws Exception {
+
+        assertTrue(true);
     }
 }
