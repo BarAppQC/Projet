@@ -32,14 +32,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                case R.id.navigation_accueil:
+                    mTextMessage.setText(R.string.title_accueil);
                     return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                case R.id.navigation_boisson:
+                    mTextMessage.setText(R.string.title_boisson);
                     return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                case R.id.navigation_paiement:
+                    mTextMessage.setText(R.string.title_paiement);
+                    return true;
+                case R.id.navigation_team:
+                    mTextMessage.setText(R.string.title_team);
                     return true;
             }
             return false;
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void initFirebase(){
         FirebaseApp.initializeApp(this);
-         database = FirebaseDatabase.getInstance();
-         myRef = database.getReference();
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
     }
 }
