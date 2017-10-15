@@ -1,5 +1,7 @@
 <resources>
+    <!-- Chaines en rapport avec les généralités de l'appli -->
     <string name="app_name">BarApp</string>
+<<<<<<< HEAD
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -28,4 +30,17 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+=======
+
+
+    <!-- Chaines en rapport avec l'interface graphique -->
+    <!-- BANDEAU DU HAUT -->
+    <string name="title_niveau">Niveau :</string>
+
+    <!-- BANDEAU DU BAS -->
+    <string name="title_accueil">Accueil</string>
+    <string name="title_paiement">Paiement</string>
+    <string name="title_boisson">Boissons</string>
+    <string name="title_team">Team</string>
+>>>>>>> 12326bfaaf1aca6e725353570a52cc779aab16d2
 </resources>
