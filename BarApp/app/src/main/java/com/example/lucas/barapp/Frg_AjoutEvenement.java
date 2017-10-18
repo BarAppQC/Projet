@@ -7,22 +7,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
-import com.facebook.login.widget.LoginButton;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Frg_Connexion.OnFragmentInteractionListener} interface
+ * {@link Frg_AjoutEvenement.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Frg_Connexion#newInstance} factory method to
+ * Use the {@link Frg_AjoutEvenement#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Frg_Connexion extends Fragment {
+public class Frg_AjoutEvenement extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -32,15 +27,9 @@ public class Frg_Connexion extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    // Views
-    private TextView info;
-    private LoginButton loginButton;
-
-    private CallbackManager callbackManager;
-
     private OnFragmentInteractionListener mListener;
 
-    public Frg_Connexion() {
+    public Frg_AjoutEvenement() {
         // Required empty public constructor
     }
 
@@ -50,11 +39,11 @@ public class Frg_Connexion extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Frg_Connexion.
+     * @return A new instance of fragment Frg_AjoutEvenement.
      */
     // TODO: Rename and change types and number of parameters
-    public static Frg_Connexion newInstance(String param1, String param2) {
-        Frg_Connexion fragment = new Frg_Connexion();
+    public static Frg_AjoutEvenement newInstance(String param1, String param2) {
+        Frg_AjoutEvenement fragment = new Frg_AjoutEvenement();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,21 +54,17 @@ public class Frg_Connexion extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        FacebookSdk.sdkInitialize(getApplicationContext());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_frg_connexion, container, false);
+        return inflater.inflate(R.layout.fragment_frg__ajout_evenement, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -104,10 +89,6 @@ public class Frg_Connexion extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    public Context getApplicationContext() {
-        return applicationContext;
     }
 
     /**

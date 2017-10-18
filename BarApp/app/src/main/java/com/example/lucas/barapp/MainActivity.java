@@ -1,5 +1,6 @@
 package com.example.lucas.barapp;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -8,11 +9,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.Console;
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 import classes.Utilisateur;
@@ -25,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase database ;
     DatabaseReference myRef ;
+    private StorageReference mStorageRef;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -78,7 +90,55 @@ public class MainActivity extends AppCompatActivity {
 
     public void initFirebase(){
         FirebaseApp.initializeApp(this);
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
+    }
+
+    private void uploadFile(String pathFrom,String pathTo){
+
+        Uri file = Uri.fromFile(new File(pathFrom));
+        StorageReference riversRef = mStorageRef.child(pathTo);
+
+        riversRef.putFile(file)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        Toast.makeText(getApplicationContext(),"Fichier uploadé",Toast.LENGTH_SHORT);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                        Toast.makeText(getApplicationContext(),"Erreur pendant l'upload",Toast.LENGTH_SHORT);
+                    }
+                });
+    }
+
+    /**
+     *
+     * @param filename
+     * @param extension extension du fichier à télecharger, sans le point
+     * @throws IOException
+     */
+    private void downloadFile(String filename,String extension) throws IOException {
+        File localFile = File.createTempFile(filename, extension);
+        mStorageRef.getFile(localFile)
+                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        // Successfully downloaded data to local file
+                        // ...
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle failed download
+                // ...
+            }
+        });
     }
 }
