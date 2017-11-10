@@ -7,11 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
-import com.facebook.login.widget.LoginButton;
 
 
 /**
@@ -31,12 +26,6 @@ public class Frg_Connexion extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    // Views
-    private TextView info;
-    private LoginButton loginButton;
-
-    private CallbackManager callbackManager;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,14 +54,10 @@ public class Frg_Connexion extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        FacebookSdk.sdkInitialize(getApplicationContext());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
     }
 
     @Override
@@ -104,10 +89,6 @@ public class Frg_Connexion extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    public Context getApplicationContext() {
-        return applicationContext;
     }
 
     /**
