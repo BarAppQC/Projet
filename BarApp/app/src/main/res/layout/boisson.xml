@@ -1,19 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:id="@+id/layout_boisson">
+    android:id="@+id/layout_filtre_boisson">
 
-    <TableRow>
-        <TextView
-            android:text="Boisson1"/>
-        <TextView
-            android:text="Boisson2"/>
-    </TableRow>
+    <LinearLayout
+        android:id="@+id/filtre_boisson"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <TableRow>
-        <TextView
-            android:text="Boisson3"/>
-        <TextView
-            android:text="Boisson4"/>
-    </TableRow>
-</TableLayout>
+        <Button
+            android:id="@+id/btn_filtre_alcool_fort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="33"
+            android:text="Alcools forts"
+            android:textAllCaps="false"
+            android:textSize="14dp"></Button>
+
+        <Button
+            android:id="@+id/btn_filtre_alcool_doux"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="33"
+            android:text="Alcools doux"
+            android:textAllCaps="false"
+            android:textSize="14dp"></Button>
+
+        <Button
+            android:id="@+id/btn_filtre_soft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="33"
+            android:text="Softs"
+            android:textAllCaps="false"
+            android:textSize="14dp"></Button>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/tri_boisson"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:layout_below="@id/filtre_boisson">
+
+        <Button
+            android:id="@+id/btn_tri"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:text="Prix"
+            android:textAllCaps="false"
+            android:textSize="14dp"></Button>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/layout_boisson"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tri_boisson">
+
+        <TableLayout
+            android:id="@+id/liste_boissons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:stretchColumns="2"></TableLayout>
+    </ScrollView>
+</RelativeLayout>
+

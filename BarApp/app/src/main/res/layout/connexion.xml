@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_connexion"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/txt_bienvenue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bienvenue !"
+        android:textSize="40dp"
+        android:textAlignment="center"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="2"
+        android:id="@+id/layout_donnees_facebook"
+        android:visibility="invisible"
+        android:layout_below="@+id/txt_bienvenue"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="9dp">
+
+        <com.facebook.login.widget.ProfilePictureView
+            android:id="@+id/connexion_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/connexion_login_button"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1"></com.facebook.login.widget.ProfilePictureView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="2"
+            android:layout_marginLeft="9dp">
+            <TextView
+                android:id="@+id/tvw_Prenom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Prénom"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/tvw_Nom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nom"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/tvw_Mail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mail"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/connexion_login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="9dp"
+        android:layout_weight="1"
+        android:layout_below="@+id/layout_donnees_facebook"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/connexion_bt_connexion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suivant"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/connexion_txt_erreur"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="9dp" />
+    <TextView
+        android:id="@+id/connexion_txt_erreur"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Veuillez vous connecter pour accéder au contenu de l'application."
+        android:textColor="@android:color/holo_red_light"
+        android:visibility="invisible"
+        android:layout_below="@+id/connexion_login_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textAlignment="center"/>
+
+</RelativeLayout>

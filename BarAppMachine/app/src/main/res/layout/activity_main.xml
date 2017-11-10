@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.lucas.barappmachine.MainActivity">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="34">
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/btn_cocktails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:text="Cocktails"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btn_boissons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:text="Boissons"
+                android:textAllCaps="false" />
+        </TableRow>
+
+        <ScrollView>
+
+            <TableLayout
+                android:id="@+id/liste_boissons_cocktails"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:stretchColumns="1">
+
+            </TableLayout>
+        </ScrollView>
+
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="66"
+        android:stretchColumns="0">
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/btn_ajouter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Ajouter"
+                android:layout_weight="50"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btn_reset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Reset"
+                android:layout_weight="50"
+                android:textAllCaps="false" />
+        </TableRow>
+
+        <TableRow>
+
+            <ImageView
+                android:id="@+id/image_verre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_bouteille_foreground"></ImageView>
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/texte_verre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:gravity="center"></TextView>
+
+        </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/btn_verre_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:text="4cl"
+                android:textSize="10dp" />
+
+            <Button
+                android:id="@+id/btn_verre_15"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:text="15cl"
+                android:textSize="10dp" />
+
+            <Button
+                android:id="@+id/btn_verre_25"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:text="25cl"
+                android:textSize="10dp" />
+
+            <Button
+                android:id="@+id/btn_verre_50"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:text="50cl"
+                android:textSize="10dp" />
+
+            <Button
+                android:id="@+id/btn_verre_100"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:text="1L"
+                android:textSize="10dp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/btn_commande"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:text="Commander !"/>
+        </TableRow>
+
+        <TableLayout
+            android:id="@+id/liste_boissons_cocktails_choisis"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stretchColumns="0">
+        </TableLayout>
+
+    </TableLayout>
+
+</LinearLayout>

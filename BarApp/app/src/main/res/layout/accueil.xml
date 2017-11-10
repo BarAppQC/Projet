@@ -5,9 +5,19 @@
     android:id="@+id/layout_accueil">
 
     <TextView
-        android:layout_height="wrap_content"
+        android:id="@+id/accueil_txt_nomprenom"
         android:layout_width="wrap_content"
-        android:text="Accueil"
-        />
+        android:layout_height="wrap_content"
+        android:text="Accueil" />
+    <!--<ListView
+        android:id="@+id/accueil_liste_evenements"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>-->
+
+    <Button
+        android:id="@+id/accueil_bt_connexion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Déconnexion" />
 
 </LinearLayout>

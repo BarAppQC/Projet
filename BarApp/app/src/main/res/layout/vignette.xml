@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/vignette"
+    android:stretchColumns="1">
+
+    <!--TableRow
+        android:id="@+id/vignette_ligne"
+        android:layout_height="50dp"
+        android:layout_width="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_ligne"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:background="@drawable/ic_argent">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_height="50dp"
+                android:text="Ceci est une description">
+            </TextView>
+        </LinearLayout>
+    </TableRow-->
+
+</TableLayout>
