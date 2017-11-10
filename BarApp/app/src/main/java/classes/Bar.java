@@ -1,10 +1,19 @@
 package classes;
 
+<<<<<<< HEAD
+=======
+import android.media.Image;
+
+>>>>>>> 5877bf2af07c078d7425920bea39e1a04d881ebe
 /**
  * Created by leofa on 15/10/2017.
  */
 
+<<<<<<< HEAD
 public class Bar {
+=======
+class Bar {
+>>>>>>> 5877bf2af07c078d7425920bea39e1a04d881ebe
 
     public String nom;
     public String adresse;

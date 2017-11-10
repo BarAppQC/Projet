@@ -1,5 +1,6 @@
 package com.example.lucas.barapp;
 
+<<<<<<< HEAD
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,10 +12,14 @@ import android.graphics.drawable.shapes.RectShape;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareUltralight;
+=======
+import android.net.Uri;
+>>>>>>> 5877bf2af07c078d7425920bea39e1a04d881ebe
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+<<<<<<< HEAD
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -53,6 +58,28 @@ import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+=======
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.Console;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+>>>>>>> 5877bf2af07c078d7425920bea39e1a04d881ebe
 
 import java.io.File;
 import java.io.IOException;
@@ -525,6 +552,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+<<<<<<< HEAD
         final ArrayList<Evenement> listeEvenements = new ArrayList<Evenement>();
         DatabaseReference myRef = database.getReference("evenements");
         myRef.addChildEventListener(new ChildEventListener() {
@@ -962,14 +990,23 @@ public class MainActivity extends AppCompatActivity {
      * Appelé en cas de clic sur le menu
      * Elle servira pour afficher ou masquer des éléments, aller chercher des informations en bdd
      */
+=======
+    private TextView mTextMessage;
+    private Button button2;
+
+    FirebaseDatabase database ;
+    DatabaseReference myRef ;
+    private StorageReference mStorageRef;
+
+>>>>>>> 5877bf2af07c078d7425920bea39e1a04d881ebe
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            // Selon sur quel onglet on a cliqué, on fait apparaitre les contenus
             switch (item.getItemId()) {
                 case R.id.navigation_accueil:
+<<<<<<< HEAD
                     showView(view_accueil);
                     return true;
                 case R.id.navigation_boisson:
@@ -980,6 +1017,18 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_team:
                     showView(view_team);
+=======
+                    mTextMessage.setText(R.string.title_accueil);
+                    return true;
+                case R.id.navigation_boisson:
+                    mTextMessage.setText(R.string.title_boisson);
+                    return true;
+                case R.id.navigation_paiement:
+                    mTextMessage.setText(R.string.title_paiement);
+                    return true;
+                case R.id.navigation_team:
+                    mTextMessage.setText(R.string.title_team);
+>>>>>>> 5877bf2af07c078d7425920bea39e1a04d881ebe
                     return true;
             }
             return false;
@@ -1188,6 +1237,7 @@ public class MainActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_main);
         initFirebase();
+<<<<<<< HEAD
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -1217,6 +1267,23 @@ public class MainActivity extends AppCompatActivity {
         view_team.setVisibility(View.GONE);
         view_connexion.setVisibility(View.GONE);
         //endregion AJOUT DES VUES AU LAYOUT PRINCIPAL
+=======
+        mTextMessage = (TextView) findViewById(R.id.message);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        button2 = (Button)findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                   // InsertUtilisateur();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+>>>>>>> 5877bf2af07c078d7425920bea39e1a04d881ebe
 
         //region BOISSON
         // Boutons de filtre
@@ -1268,6 +1335,7 @@ public class MainActivity extends AppCompatActivity {
         showView(view_paiement);
     }
 
+<<<<<<< HEAD
     public void onNewIntent(Intent intent) {
         Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
@@ -1294,5 +1362,59 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+=======
+    public void initFirebase(){
+        FirebaseApp.initializeApp(this);
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
+    }
+
+    private void uploadFile(String pathFrom,String pathTo){
+
+        Uri file = Uri.fromFile(new File(pathFrom));
+        StorageReference riversRef = mStorageRef.child(pathTo);
+
+        riversRef.putFile(file)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        Toast.makeText(getApplicationContext(),"Fichier uploadé",Toast.LENGTH_SHORT);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                        Toast.makeText(getApplicationContext(),"Erreur pendant l'upload",Toast.LENGTH_SHORT);
+                    }
+                });
+    }
+
+    /**
+     *
+     * @param filename
+     * @param extension extension du fichier à télecharger, sans le point
+     * @throws IOException
+     */
+    private void downloadFile(String filename,String extension) throws IOException {
+        File localFile = File.createTempFile(filename, extension);
+        mStorageRef.getFile(localFile)
+                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        // Successfully downloaded data to local file
+                        // ...
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle failed download
+                // ...
+            }
+        });
+>>>>>>> 5877bf2af07c078d7425920bea39e1a04d881ebe
     }
 }
