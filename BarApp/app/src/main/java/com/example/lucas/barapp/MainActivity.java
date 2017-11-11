@@ -3,8 +3,10 @@ package com.example.lucas.barapp;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
@@ -205,6 +207,8 @@ public class MainActivity extends AppCompatActivity {
 
     //region PAIEMENT
     private TextView pointArgent;
+    private TextView nom_prenom;
+    private TextView point_fidelite;
     private int moneyInt;
     private ImageView lienPlus;
 
@@ -216,8 +220,9 @@ public class MainActivity extends AppCompatActivity {
     private Button dixDollar;
     private Button vingtDollar;
     private Button cinquanteDollar;
-   private Button validerPaiement;
-   private  EditText mEdit;
+    private Button validerPaiement;
+    private EditText mEdit;
+    Toast toast_trop_argent;
 
     //endregion PAIEMENT
 
@@ -389,10 +394,19 @@ public class MainActivity extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Utilisateur u = new Utilisateur();
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                     utilisateur = new Utilisateur((String) messageSnapshot.child("id").getValue(), (String) messageSnapshot.child("mail").getValue(), (String) messageSnapshot.child("nom").getValue(), (String) messageSnapshot.child("prenom").getValue(), ((Long) messageSnapshot.child("ptFidelite").getValue()).intValue(), ((Long) messageSnapshot.child("ptConso").getValue()).intValue());
                 }
+
+                pointArgent = (TextView) findViewById(R.id.valeurPointArgent);
+                pointArgent.setText(String.valueOf(utilisateur.ptConso));
+
+                nom_prenom = (TextView) findViewById(R.id.nomUtilisateur);
+                nom_prenom.setText(utilisateur.prenom + " " + utilisateur.nom);
+
+                point_fidelite = (TextView) findViewById(R.id.valeurPointFidelite);
+                point_fidelite.setText(String.valueOf(utilisateur.ptFidelite));
+
             }
 
             @Override
@@ -593,10 +607,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Profile user = Profile.getCurrentProfile();
+                selectUtilisateur("06bca15d-3c10-4e12-8565-2757461b16cd");
                 if (user != null) {
                     selectUtilisateur(user.getId());
                     connexion_txt_erreur.setVisibility(View.GONE);
                     accueil_txt_nomprenom.setText(utilisateur.nom + " " + utilisateur.prenom);
+                    connexion_layout_donnees_fb.setVisibility(View.GONE);
                     showView(view_accueil);
                 } else {
                     connexion_txt_erreur.setVisibility(View.VISIBLE);
@@ -677,16 +693,22 @@ public class MainActivity extends AppCompatActivity {
         mEdit = (EditText) view_paiement.findViewById(R.id.paiement_perso);
         lienPlus = (ImageView) findViewById(R.id.plusPointArgent);
 
+        selectUtilisateur("06bca15d-3c10-4e12-8565-2757461b16cd");
+
         cinqDollar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                moneyInt += utilisateur.ptConso+ 5*137;
-                pointArgent.setText(String.valueOf(moneyInt));
-                try {
-                    utilisateur.ptConso=moneyInt;
-                    insertUtilisateur(utilisateur);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                moneyInt = utilisateur.ptConso+ 5*137;
+                if (moneyInt < 0) {
+                    toast_trop_argent.show();
+                } else {
+                    pointArgent.setText(String.valueOf(moneyInt));
+                    try {
+                        utilisateur.ptConso=moneyInt;
+                        insertUtilisateur(utilisateur);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -694,13 +716,17 @@ public class MainActivity extends AppCompatActivity {
         dixDollar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                moneyInt += utilisateur.ptConso+ 5*137*1.05;
-                pointArgent.setText(String.valueOf(moneyInt));
-                try {
-                    utilisateur.ptConso=moneyInt;
-                    insertUtilisateur(utilisateur);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                moneyInt = utilisateur.ptConso + (int) (10*137*1.05);
+                if (moneyInt < 0) {
+                    toast_trop_argent.show();
+                } else {
+                    pointArgent.setText(String.valueOf(moneyInt));
+                    try {
+                        utilisateur.ptConso = moneyInt;
+                        insertUtilisateur(utilisateur);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -709,13 +735,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // bonus de 10% sur la monnaie ajouté
-                moneyInt += (20*137*1.1);
-                pointArgent.setText(String.valueOf(moneyInt));
-                utilisateur.ptConso=moneyInt;
-                try {
-                    insertUtilisateur(utilisateur);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                moneyInt = utilisateur.ptConso + (int) (20*137*1.1);
+                if (moneyInt < 0) {
+                    toast_trop_argent.show();
+                } else {
+                    pointArgent.setText(String.valueOf(moneyInt));
+                    utilisateur.ptConso = moneyInt;
+                    try {
+                        insertUtilisateur(utilisateur);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -724,13 +754,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // bonus de 15% sur la monnaie ajouté
-                moneyInt += (50*137*1.15);
-                pointArgent.setText(String.valueOf(moneyInt));
-                utilisateur.ptConso=moneyInt;
-                try {
-                    insertUtilisateur(utilisateur);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                moneyInt = utilisateur.ptConso + (int)(50*137*1.15);
+                if (moneyInt < 0) {
+                    toast_trop_argent.show();
+                } else {
+                    pointArgent.setText(String.valueOf(moneyInt));
+                    utilisateur.ptConso = moneyInt;
+                    try {
+                        insertUtilisateur(utilisateur);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -744,22 +778,33 @@ public class MainActivity extends AppCompatActivity {
                 if (!somme.equals("")){
                     int mEditInt = Integer.parseInt(somme);
                     // bonus de 15% sur la monnaie ajouté si la somme est supérieur à 50$
-                    if (mEditInt > 50){
-                        moneyInt += (int)( mEditInt*137*1.15);
-                        try {
-                            utilisateur.ptConso=moneyInt;
-                            insertUtilisateur(utilisateur);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    if (mEditInt >= 50){
+                        moneyInt = utilisateur.ptConso + (int)( mEditInt*137*1.15);
+                        if (moneyInt < 0) {
+                            toast_trop_argent.show();
+                        } else {
+                            try {
+                                utilisateur.ptConso = moneyInt;
+                                insertUtilisateur(utilisateur);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }else {
-                        moneyInt += mEditInt*137;
-                        try {
-                            utilisateur.ptConso=moneyInt;
-                            insertUtilisateur(utilisateur);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                    } else if (mEditInt >= 0) {
+                        moneyInt = utilisateur.ptConso + mEditInt*137;
+                        if (moneyInt < 0) {
+                            toast_trop_argent.show();
+                        } else {
+                            try {
+                                utilisateur.ptConso = moneyInt;
+                                insertUtilisateur(utilisateur);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
+                    } else {
+                        Toast lala = Toast.makeText(getApplicationContext(), "Veuillez entrer une valeur positive", Toast.LENGTH_LONG);
+                        lala.show();
                     }
                     pointArgent.setText(String.valueOf(moneyInt));
                     mEdit.setText(null);
@@ -806,13 +851,17 @@ public class MainActivity extends AppCompatActivity {
                 TableRow vignette = new TableRow(this);
                 vignette.setId(i);
                 etendue[i] = false;
-                vignette.setBackgroundDrawable(getResources().getDrawable(R.drawable.vignette));
+                //vignette.setBackgroundDrawable(getResources().getDrawable(R.drawable.vignette));
                 vignette.setOnClickListener(vignette_listener);
 
                 // image
                 ImageView image = new ImageView(this);
                 image.setId(10000 + i);
-                image.setImageDrawable(boisson.getImage());
+
+                Bitmap bitmap = ((BitmapDrawable) boisson.getImage()).getBitmap();
+                Drawable image_reduite = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
+
+                image.setBackgroundDrawable(image_reduite);
 
                 // description
                 TextView description = new TextView(this);
@@ -823,9 +872,10 @@ public class MainActivity extends AppCompatActivity {
                 // taux d'alcolémie centré à droite
                 TextView taux_alcool = new TextView(this);
                 taux_alcool.setId(500 + i);
-                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°");
+                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()));
                 taux_alcool.setTextSize(16);
                 taux_alcool.setGravity(Gravity.RIGHT);
+                taux_alcool.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_piece, 0);
 
                 vignette.addView(image);
                 vignette.addView(description);
@@ -838,13 +888,16 @@ public class MainActivity extends AppCompatActivity {
                 TableRow vignette = new TableRow(this);
                 vignette.setId(i);
                 etendue[i] = false;
-                vignette.setBackgroundDrawable(getResources().getDrawable(R.drawable.vignette));
+                //vignette.setBackgroundDrawable(getResources().getDrawable(R.drawable.vignette));
                 vignette.setOnClickListener(vignette_listener);
 
                 // image
                 ImageView image = new ImageView(this);
                 image.setId(10000 + i);
-                image.setImageDrawable(boisson.getImage());
+                Bitmap bitmap = ((BitmapDrawable) boisson.getImage()).getBitmap();
+                Drawable image_reduite = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
+
+                image.setBackgroundDrawable(image_reduite);
 
                 // description
                 TextView description = new TextView(this);
@@ -855,9 +908,10 @@ public class MainActivity extends AppCompatActivity {
                 // taux d'alcolémie centré à droite
                 TextView taux_alcool = new TextView(this);
                 taux_alcool.setId(500 + i);
-                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()) + "$");
+                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()));
                 taux_alcool.setTextSize(16);
                 taux_alcool.setGravity(Gravity.RIGHT);
+                taux_alcool.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_piece, 0);
 
                 vignette.addView(image);
                 vignette.addView(description);
@@ -870,13 +924,16 @@ public class MainActivity extends AppCompatActivity {
                 TableRow vignette = new TableRow(this);
                 vignette.setId(i);
                 etendue[i] = false;
-                vignette.setBackgroundDrawable(getResources().getDrawable(R.drawable.vignette));
+                //vignette.setBackgroundDrawable(getResources().getDrawable(R.drawable.vignette));
                 vignette.setOnClickListener(vignette_listener);
 
                 // image
                 ImageView image = new ImageView(this);
                 image.setId(10000 + i);
-                image.setImageDrawable(boisson.getImage());
+                Bitmap bitmap = ((BitmapDrawable) boisson.getImage()).getBitmap();
+                Drawable image_reduite = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
+
+                image.setBackgroundDrawable(image_reduite);
 
                 // description
                 TextView description = new TextView(this);
@@ -887,9 +944,10 @@ public class MainActivity extends AppCompatActivity {
                 // taux d'alcolémie centré à droite
                 TextView taux_alcool = new TextView(this);
                 taux_alcool.setId(500 + i);
-                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()) + "$");
+                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()));
                 taux_alcool.setTextSize(16);
                 taux_alcool.setGravity(Gravity.RIGHT);
+                taux_alcool.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_piece, 0);
 
                 vignette.addView(image);
                 vignette.addView(description);
@@ -902,13 +960,16 @@ public class MainActivity extends AppCompatActivity {
                 TableRow vignette = new TableRow(this);
                 vignette.setId(i);
                 etendue[i] = false;
-                vignette.setBackgroundDrawable(getResources().getDrawable(R.drawable.vignette));
+                //vignette.setBackgroundDrawable(getResources().getDrawable(R.drawable.vignette));
                 vignette.setOnClickListener(vignette_listener);
 
                 // image
                 ImageView image = new ImageView(this);
                 image.setId(10000 + i);
-                image.setImageDrawable(boisson.getImage());
+                Bitmap bitmap = ((BitmapDrawable) boisson.getImage()).getBitmap();
+                Drawable image_reduite = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
+
+                image.setBackgroundDrawable(image_reduite);
 
                 // description
                 TextView description = new TextView(this);
@@ -919,9 +980,10 @@ public class MainActivity extends AppCompatActivity {
                 // taux d'alcolémie centré à droite
                 TextView taux_alcool = new TextView(this);
                 taux_alcool.setId(500 + i);
-                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()) + "$");
+                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()));
                 taux_alcool.setTextSize(16);
                 taux_alcool.setGravity(Gravity.RIGHT);
+                taux_alcool.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_piece, 0);
 
                 vignette.addView(image);
                 vignette.addView(description);
@@ -1010,7 +1072,11 @@ public class MainActivity extends AppCompatActivity {
                 if (etendue[i]) {
                     TextView texteAReduire = (TextView) findViewById(100 + i);
                     ImageView imageAReduire = (ImageView) findViewById(10000 + i);
-                    imageAReduire.setImageDrawable(data_boissons.get(i).getImage()); // images
+                    Bitmap bitmap = ((BitmapDrawable) data_boissons.get(i).getImage()).getBitmap();
+                    Drawable image_reduite = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
+
+                    imageAReduire.setBackgroundDrawable(image_reduite);
+                    //imageAReduire.setImageDrawable(data_boissons.get(i).getImage()); // images
                     texteAReduire.setText(data_boissons.get(i).getTitreCourt()); // data_boissons
                     etendue[i] = false;
                     reduite = i;
@@ -1021,6 +1087,8 @@ public class MainActivity extends AppCompatActivity {
                 TextView texteAEtendre = (TextView) findViewById(100 + v.getId());
                 texteAEtendre.setWidth(430);
                 texteAEtendre.setText(data_boissons.get(v.getId()).getTitreLong()); // data_boissons
+                ImageView imageAEtendre = (ImageView) findViewById(10000 + v.getId());
+                imageAEtendre.setBackgroundDrawable(data_boissons.get(v.getId()).getImage());
                 //ImageView imageAEtendre = (ImageView) findViewById(10000 + v.getId());
 
                 /*Drawable dr = images[v.getId()];
@@ -1149,7 +1217,7 @@ public class MainActivity extends AppCompatActivity {
                 tri.setText("Prix");
 
                 for (Boisson b : data_boissons) {
-                    b.setTri("id");
+                    b.setTri("prix");
                 }
                 Collections.sort(data_boissons, new Boisson());
                 affichage_boissons(data_boissons);
@@ -1234,25 +1302,15 @@ public class MainActivity extends AppCompatActivity {
         // on fait appel à cette fonction ici afin de minimiser les temps de chargement au sein
         // de l'application
         leFiltre = "tous";
-        selectBoissons("id");
+        selectBoissons("prix");
         //endregion BOISSON
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-
-        IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-        try {
-            ndef.addDataType("*/*");
-        } catch (IntentFilter.MalformedMimeTypeException e) {
-            throw new RuntimeException("fail", e);
-        }
-        //IntentFilter[] intentFiltersArray = new IntentFilter[]{ndef,};
-
         // initialisation des vues
-        initializeViewConnexion();
+        //initializeViewConnexion();
         initializeViewAccueil();
         initializeViewPaiement();
 
+        /*
         //region CONNEXION
         // Si aucun utilisateur n'est connecté, on affiche la fenêtre de connexion
         Profile user = Profile.getCurrentProfile();
@@ -1262,10 +1320,9 @@ public class MainActivity extends AppCompatActivity {
             selectUtilisateur(user.getId());
             //   accueil_txt_nomprenom.setText(utilisateur.nom+""+utilisateur.prenom);
         }
-        //endregion CONNEXION
+        //endregion CONNEXION*/
 
-        // TODO virer cette merde
-        showView(view_paiement);
+        toast_trop_argent = Toast.makeText(getApplicationContext(), "Vous ne pouvez pas mettre plus d'argent...", Toast.LENGTH_SHORT);
     }
 
     public void onNewIntent(Intent intent) {

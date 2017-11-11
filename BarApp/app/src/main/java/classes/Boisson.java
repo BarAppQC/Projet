@@ -181,8 +181,8 @@ public class Boisson implements Comparator<Boisson> {
         switch(b1.tri) {
             case "nom":
                 return b1.nom.compareTo(b2.nom);
-            case "id" :
-                return Integer.compare(b1.id, b2.id);
+            case "prix" :
+                return Double.compare(b1.prix, b2.prix);
             case "puissance":
                 return Double.compare(b1.taux_alcoolemie, b2.taux_alcoolemie);
         }

@@ -41,10 +41,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="@dimen/bandeau_haut_marge_left"
-            android:layout_marginTop="@dimen/bandeau_haut_marge_haut"
-            android:text="lala" />
+            android:layout_marginTop="@dimen/bandeau_haut_marge_haut" />
 
-        <TextView
+        <!--TextView
             android:id="@+id/niveau"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,9 +51,9 @@
             android:layout_below="@id/nomUtilisateur"
             android:layout_marginLeft="@dimen/bandeau_haut_marge_left"
             android:layout_marginTop="@dimen/bandeau_haut_marge_haut"
-            android:text="@string/title_niveau" />
+            android:text="@string/title_niveau" /-->
 
-        <TextView
+        <!--TextView
             android:id="@+id/valeurNiveau"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,7 +62,7 @@
             android:layout_marginLeft="@dimen/bandeau_haut_margin_left"
             android:layout_toEndOf="@+id/niveau"
             android:layout_toRightOf="@+id/niveau"
-            android:text="11" />
+            android:text="11" /-->
 
         <!--ProgressBar
             android:id="@+id/progressionNiveau"
@@ -112,8 +111,7 @@
             android:layout_alignTop="@+id/plusPointArgent"
             android:layout_toLeftOf="@+id/pointArgent"
             android:layout_toStartOf="@+id/pointArgent"
-            android:layout_marginRight="@dimen/bandeau_haut_margin_right"
-            android:text="100" />
+            android:layout_marginRight="@dimen/bandeau_haut_margin_right"/>
 
         <ImageView
             android:id="@+id/plusPointArgent"

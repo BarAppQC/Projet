@@ -563,7 +563,8 @@ public class MainActivity extends AppCompatActivity {
                 // taux d'alcolémie centré à droite
                 TextView taux_alcool = new TextView(this);
                 taux_alcool.setId(500 + i);
-                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()) + "$");
+                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()));
+                taux_alcool.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_piece, 0, 0, 0);
                 taux_alcool.setTextSize(16);
                 taux_alcool.setGravity(Gravity.RIGHT);
 
