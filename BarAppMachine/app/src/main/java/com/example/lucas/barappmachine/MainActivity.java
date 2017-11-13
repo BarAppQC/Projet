@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.RectShape;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -163,6 +165,15 @@ public class MainActivity extends AppCompatActivity {
     Button verre_25;
     Button verre_50;
     Button verre_100;
+
+    Button btn_filtre_alcool_fort;
+    Button btn_filtre_alcool_doux;
+    Button btn_filtre_soft;
+
+    /**
+     * Afin de récupérer le style de bouton "normal" après modification
+     */
+    Drawable style_button_defaut;
 
     /**
      * La zone de texte disant quel verre est sélectionné
@@ -551,28 +562,118 @@ public class MainActivity extends AppCompatActivity {
 
                 // image
                 ImageView image = new ImageView(this);
+
+                Bitmap bitmap = ((BitmapDrawable) boisson.getImage()).getBitmap();
+                Drawable image_reduite = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 75, 75, true));
                 image.setId(10000 + i);
-                image.setImageDrawable(boisson.getImage());
+                image.setImageDrawable(image_reduite);
 
-                // description
-                TextView description = new TextView(this);
-                description.setId(100 + i);
-                description.setText(boisson.getTitreCourt());
-                description.setTextSize(16);
+                // nom de la boisson en gras
+                TextView nom = new TextView(this);
+                nom.setId(100 + i);
+                nom.setText(boisson.getNom());
+                nom.setTypeface(null, Typeface.BOLD);
+                nom.setTextSize(16);
 
-                // taux d'alcolémie centré à droite
-                TextView taux_alcool = new TextView(this);
-                taux_alcool.setId(500 + i);
-                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()));
-                taux_alcool.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_piece, 0, 0, 0);
-                taux_alcool.setTextSize(16);
-                taux_alcool.setGravity(Gravity.RIGHT);
+                // prix centré à droite
+                TextView prix = new TextView(this);
+                prix.setId(500 + i);
+                prix.setText(String.valueOf(boisson.getPrix()));
+                prix.setTextSize(16);
+                prix.setGravity(Gravity.RIGHT);
+                prix.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_piece, 0);
 
                 vignette.addView(image);
-                vignette.addView(description);
-                vignette.addView(taux_alcool);
+                vignette.addView(nom);
+                vignette.addView(prix);
+
+                // choix de la quantité
+                TableRow quantite_boisson = new TableRow(this);
+                TextView vide = new TextView(this);
+                TextView quantite_texte = new TextView(this);
+
+                quantite_texte.setId(2000 + i);
+                SeekBar quantite = new SeekBar(this);
+                quantite.setId(1000 + i);
+                quantite.setMax(verre);
+                ShapeDrawable thumb = new ShapeDrawable(new OvalShape());
+                thumb.setIntrinsicHeight(30);
+                thumb.setIntrinsicWidth(30);
+                quantite.setThumb(thumb);
+                quantite.setProgress(0);
+                quantite_texte.setText(quantite.getProgress() + "cl");
+
+                /**
+                 * On met à jour la valeur du texte à côté du seekBar pour informer l'utilisateur
+                 * de la quantité de la boisson qu'il est en train de se servir
+                 */
+                quantite.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                        TextView aChanger = (TextView) findViewById(seekBar.getId()+1000);
+                        aChanger.setText(i + "cl");
+
+                        if (i == 0) {
+                            btn_ajouter.setClickable(false);
+                            if (isBoissonSelectionnee()) {
+                                btn_ajouter.setClickable(true);
+                            }
+                        } else {
+                            btn_ajouter.setClickable(true);
+                        }
+                    }
+
+                    /**
+                     * On récupère la valeur de départ afin d'évaluer la variation du progress
+                     * dans le onStopTrackingTouch
+                     * @param seekBar : le seekbar qui a été touché
+                     */
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                        quantite_start = seekBar.getProgress();
+                    }
+
+                    /**
+                     * Met à jour la valeur maximale des seek bar qui ne sont pas encore renseignées
+                     * pour éviter à l'utilisateur de rentrer des valeurs plus grandes que ce que
+                     * permet le verre
+                     * @param seekBar : la seekBar qui a été modifiée à l'instant : celle-ci on y
+                     *                touche pas, par contre on récupère sa progression pour savoir
+                     *                où en est le total de quantité
+                     */
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        SeekBar aChanger;
+                        quantite_stop = seekBar.getProgress();
+
+                        if (quantite_stop > quantite_start) {
+                            quantite_boissons += quantite_stop - quantite_start;
+                        } else {
+                            quantite_boissons -= quantite_start - quantite_stop;
+                        }
+
+                        for (int i = 0; i < nb_boissons; i++) {
+                            aChanger = (SeekBar) findViewById(1000 + i);
+                            if ((i+1000) != seekBar.getId() && aChanger.getProgress() == 0) {
+                                aChanger.setMax(verre - quantite_boissons);
+                            }
+                        }
+                    }
+                });
+
+                quantite_boisson.addView(vide);
+                quantite_boisson.addView(quantite);
+                quantite_boisson.addView(quantite_texte);
+
+                TableRow vignette_vide = new TableRow(this);
+                TextView texte_vide = new TextView(this);
+                texte_vide.setText("lala");
+                texte_vide.setVisibility(View.INVISIBLE);
+                vignette_vide.addView(texte_vide);
 
                 layout_boissons.addView(vignette);
+                layout_boissons.addView(quantite_boisson);
+                layout_boissons.addView(vignette_vide);
                 i++;
             } else if (leFiltre.equals("doux") && boisson.isAlcoolDoux()) {
                 // regroupe image et description
@@ -581,27 +682,118 @@ public class MainActivity extends AppCompatActivity {
 
                 // image
                 ImageView image = new ImageView(this);
+
+                Bitmap bitmap = ((BitmapDrawable) boisson.getImage()).getBitmap();
+                Drawable image_reduite = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 75, 75, true));
                 image.setId(10000 + i);
-                image.setImageDrawable(boisson.getImage());
+                image.setImageDrawable(image_reduite);
 
-                // description
-                TextView description = new TextView(this);
-                description.setId(100 + i);
-                description.setText(boisson.getTitreCourt());
-                description.setTextSize(16);
+                // nom de la boisson en gras
+                TextView nom = new TextView(this);
+                nom.setId(100 + i);
+                nom.setText(boisson.getNom());
+                nom.setTypeface(null, Typeface.BOLD);
+                nom.setTextSize(16);
 
-                // taux d'alcolémie centré à droite
-                TextView taux_alcool = new TextView(this);
-                taux_alcool.setId(500 + i);
-                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()) + "$");
-                taux_alcool.setTextSize(16);
-                taux_alcool.setGravity(Gravity.RIGHT);
+                // prix centré à droite
+                TextView prix = new TextView(this);
+                prix.setId(500 + i);
+                prix.setText(String.valueOf(boisson.getPrix()));
+                prix.setTextSize(16);
+                prix.setGravity(Gravity.RIGHT);
+                prix.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_piece, 0);
 
                 vignette.addView(image);
-                vignette.addView(description);
-                vignette.addView(taux_alcool);
+                vignette.addView(nom);
+                vignette.addView(prix);
+
+                // choix de la quantité
+                TableRow quantite_boisson = new TableRow(this);
+                TextView vide = new TextView(this);
+                TextView quantite_texte = new TextView(this);
+
+                quantite_texte.setId(2000 + i);
+                SeekBar quantite = new SeekBar(this);
+                quantite.setId(1000 + i);
+                quantite.setMax(verre);
+                ShapeDrawable thumb = new ShapeDrawable(new OvalShape());
+                thumb.setIntrinsicHeight(30);
+                thumb.setIntrinsicWidth(30);
+                quantite.setThumb(thumb);
+                quantite.setProgress(0);
+                quantite_texte.setText(quantite.getProgress() + "cl");
+
+                /**
+                 * On met à jour la valeur du texte à côté du seekBar pour informer l'utilisateur
+                 * de la quantité de la boisson qu'il est en train de se servir
+                 */
+                quantite.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                        TextView aChanger = (TextView) findViewById(seekBar.getId()+1000);
+                        aChanger.setText(i + "cl");
+
+                        if (i == 0) {
+                            btn_ajouter.setClickable(false);
+                            if (isBoissonSelectionnee()) {
+                                btn_ajouter.setClickable(true);
+                            }
+                        } else {
+                            btn_ajouter.setClickable(true);
+                        }
+                    }
+
+                    /**
+                     * On récupère la valeur de départ afin d'évaluer la variation du progress
+                     * dans le onStopTrackingTouch
+                     * @param seekBar : le seekbar qui a été touché
+                     */
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                        quantite_start = seekBar.getProgress();
+                    }
+
+                    /**
+                     * Met à jour la valeur maximale des seek bar qui ne sont pas encore renseignées
+                     * pour éviter à l'utilisateur de rentrer des valeurs plus grandes que ce que
+                     * permet le verre
+                     * @param seekBar : la seekBar qui a été modifiée à l'instant : celle-ci on y
+                     *                touche pas, par contre on récupère sa progression pour savoir
+                     *                où en est le total de quantité
+                     */
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        SeekBar aChanger;
+                        quantite_stop = seekBar.getProgress();
+
+                        if (quantite_stop > quantite_start) {
+                            quantite_boissons += quantite_stop - quantite_start;
+                        } else {
+                            quantite_boissons -= quantite_start - quantite_stop;
+                        }
+
+                        for (int i = 0; i < nb_boissons; i++) {
+                            aChanger = (SeekBar) findViewById(1000 + i);
+                            if ((i+1000) != seekBar.getId() && aChanger.getProgress() == 0) {
+                                aChanger.setMax(verre - quantite_boissons);
+                            }
+                        }
+                    }
+                });
+
+                quantite_boisson.addView(vide);
+                quantite_boisson.addView(quantite);
+                quantite_boisson.addView(quantite_texte);
+
+                TableRow vignette_vide = new TableRow(this);
+                TextView texte_vide = new TextView(this);
+                texte_vide.setText("lala");
+                texte_vide.setVisibility(View.INVISIBLE);
+                vignette_vide.addView(texte_vide);
 
                 layout_boissons.addView(vignette);
+                layout_boissons.addView(quantite_boisson);
+                layout_boissons.addView(vignette_vide);
                 i++;
             } else if (leFiltre.equals("soft") && boisson.isSoft()) {
                 // regroupe image et description
@@ -610,27 +802,118 @@ public class MainActivity extends AppCompatActivity {
 
                 // image
                 ImageView image = new ImageView(this);
+
+                Bitmap bitmap = ((BitmapDrawable) boisson.getImage()).getBitmap();
+                Drawable image_reduite = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 75, 75, true));
                 image.setId(10000 + i);
-                image.setImageDrawable(boisson.getImage());
+                image.setImageDrawable(image_reduite);
 
-                // description
-                TextView description = new TextView(this);
-                description.setId(100 + i);
-                description.setText(boisson.getTitreCourt());
-                description.setTextSize(16);
+                // nom de la boisson en gras
+                TextView nom = new TextView(this);
+                nom.setId(100 + i);
+                nom.setText(boisson.getNom());
+                nom.setTypeface(null, Typeface.BOLD);
+                nom.setTextSize(16);
 
-                // taux d'alcolémie centré à droite
-                TextView taux_alcool = new TextView(this);
-                taux_alcool.setId(500 + i);
-                taux_alcool.setText(String.valueOf(boisson.getTaux_alcoolemie()) + "°\n" + String.valueOf(boisson.getPrix()) + "$");
-                taux_alcool.setTextSize(16);
-                taux_alcool.setGravity(Gravity.RIGHT);
+                // prix centré à droite
+                TextView prix = new TextView(this);
+                prix.setId(500 + i);
+                prix.setText(String.valueOf(boisson.getPrix()));
+                prix.setTextSize(16);
+                prix.setGravity(Gravity.RIGHT);
+                prix.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_piece, 0);
 
                 vignette.addView(image);
-                vignette.addView(description);
-                vignette.addView(taux_alcool);
+                vignette.addView(nom);
+                vignette.addView(prix);
+
+                // choix de la quantité
+                TableRow quantite_boisson = new TableRow(this);
+                TextView vide = new TextView(this);
+                TextView quantite_texte = new TextView(this);
+
+                quantite_texte.setId(2000 + i);
+                SeekBar quantite = new SeekBar(this);
+                quantite.setId(1000 + i);
+                quantite.setMax(verre);
+                ShapeDrawable thumb = new ShapeDrawable(new OvalShape());
+                thumb.setIntrinsicHeight(30);
+                thumb.setIntrinsicWidth(30);
+                quantite.setThumb(thumb);
+                quantite.setProgress(0);
+                quantite_texte.setText(quantite.getProgress() + "cl");
+
+                /**
+                 * On met à jour la valeur du texte à côté du seekBar pour informer l'utilisateur
+                 * de la quantité de la boisson qu'il est en train de se servir
+                 */
+                quantite.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                        TextView aChanger = (TextView) findViewById(seekBar.getId()+1000);
+                        aChanger.setText(i + "cl");
+
+                        if (i == 0) {
+                            btn_ajouter.setClickable(false);
+                            if (isBoissonSelectionnee()) {
+                                btn_ajouter.setClickable(true);
+                            }
+                        } else {
+                            btn_ajouter.setClickable(true);
+                        }
+                    }
+
+                    /**
+                     * On récupère la valeur de départ afin d'évaluer la variation du progress
+                     * dans le onStopTrackingTouch
+                     * @param seekBar : le seekbar qui a été touché
+                     */
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                        quantite_start = seekBar.getProgress();
+                    }
+
+                    /**
+                     * Met à jour la valeur maximale des seek bar qui ne sont pas encore renseignées
+                     * pour éviter à l'utilisateur de rentrer des valeurs plus grandes que ce que
+                     * permet le verre
+                     * @param seekBar : la seekBar qui a été modifiée à l'instant : celle-ci on y
+                     *                touche pas, par contre on récupère sa progression pour savoir
+                     *                où en est le total de quantité
+                     */
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        SeekBar aChanger;
+                        quantite_stop = seekBar.getProgress();
+
+                        if (quantite_stop > quantite_start) {
+                            quantite_boissons += quantite_stop - quantite_start;
+                        } else {
+                            quantite_boissons -= quantite_start - quantite_stop;
+                        }
+
+                        for (int i = 0; i < nb_boissons; i++) {
+                            aChanger = (SeekBar) findViewById(1000 + i);
+                            if ((i+1000) != seekBar.getId() && aChanger.getProgress() == 0) {
+                                aChanger.setMax(verre - quantite_boissons);
+                            }
+                        }
+                    }
+                });
+
+                quantite_boisson.addView(vide);
+                quantite_boisson.addView(quantite);
+                quantite_boisson.addView(quantite_texte);
+
+                TableRow vignette_vide = new TableRow(this);
+                TextView texte_vide = new TextView(this);
+                texte_vide.setText("lala");
+                texte_vide.setVisibility(View.INVISIBLE);
+                vignette_vide.addView(texte_vide);
 
                 layout_boissons.addView(vignette);
+                layout_boissons.addView(quantite_boisson);
+                layout_boissons.addView(vignette_vide);
                 i++;
             }
         }
@@ -834,6 +1117,81 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    View.OnClickListener click_btn_filtre = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            // On enlève tous les éléments du layout vu qu'on va en afficher de nouveaux
+            TableLayout layout_boissons = (TableLayout) findViewById(R.id.liste_boissons_cocktails);
+            layout_boissons.removeAllViews();
+
+            switch (v.getId()) {
+                case R.id.btn_filtre_alcool_fort:
+                    if (leFiltre.equals("fort")) {
+                        leFiltre = "tous";
+                        btn_filtre_soft.setBackground(style_button_defaut);
+                        btn_filtre_alcool_fort.setBackground(style_button_defaut);
+                        btn_filtre_alcool_doux.setBackground(style_button_defaut);
+                    } else {
+                        leFiltre = "fort";
+                        ShapeDrawable shapedrawable = new ShapeDrawable();
+                        shapedrawable.setShape(new RectShape());
+                        shapedrawable.getPaint().setColor(Color.RED);
+                        shapedrawable.getPaint().setStrokeWidth(10f);
+                        shapedrawable.getPaint().setStyle(Paint.Style.STROKE);
+                        btn_filtre_alcool_fort.setBackground(shapedrawable);
+                        btn_filtre_soft.setBackground(style_button_defaut);
+                        btn_filtre_alcool_doux.setBackground(style_button_defaut);
+                    }
+
+                    affichage_boissons(data_boissons);
+                    break;
+
+                case R.id.btn_filtre_alcool_doux:
+                    if (leFiltre.equals("doux")) {
+                        leFiltre = "tous";
+                        btn_filtre_soft.setBackground(style_button_defaut);
+                        btn_filtre_alcool_fort.setBackground(style_button_defaut);
+                        btn_filtre_alcool_doux.setBackground(style_button_defaut);
+                    } else {
+                        leFiltre = "doux";
+                        ShapeDrawable shapedrawable = new ShapeDrawable();
+                        shapedrawable.setShape(new RectShape());
+                        shapedrawable.getPaint().setColor(Color.RED);
+                        shapedrawable.getPaint().setStrokeWidth(10f);
+                        shapedrawable.getPaint().setStyle(Paint.Style.STROKE);
+                        btn_filtre_alcool_doux.setBackground(shapedrawable);
+                        btn_filtre_soft.setBackground(style_button_defaut);
+                        btn_filtre_alcool_fort.setBackground(style_button_defaut);
+                    }
+
+                    affichage_boissons(data_boissons);
+                    break;
+                case R.id.btn_filtre_soft:
+                    if (leFiltre.equals("soft")) {
+                        leFiltre = "tous";
+                        btn_filtre_soft.setBackground(style_button_defaut);
+                        btn_filtre_alcool_fort.setBackground(style_button_defaut);
+                        btn_filtre_alcool_doux.setBackground(style_button_defaut);
+                    } else {
+                        leFiltre = "soft";
+                        ShapeDrawable shapedrawable = new ShapeDrawable();
+                        shapedrawable.setShape(new RectShape());
+                        shapedrawable.getPaint().setColor(Color.RED);
+                        shapedrawable.getPaint().setStrokeWidth(10f);
+                        shapedrawable.getPaint().setStyle(Paint.Style.STROKE);
+                        btn_filtre_soft.setBackground(shapedrawable);
+                        btn_filtre_alcool_doux.setBackground(style_button_defaut);
+                        btn_filtre_alcool_fort.setBackground(style_button_defaut);
+                    }
+
+                    affichage_boissons(data_boissons);
+
+                    break;
+            }
+        }
+    };
+
     //endregion BOISSON
 
     //region COCKTAIL
@@ -899,6 +1257,14 @@ public class MainActivity extends AppCompatActivity {
 
         btn_commande = (Button) findViewById(R.id.btn_commande);
         btn_commande.setOnClickListener(click_btn_commande);
+
+        btn_filtre_alcool_fort = (Button) findViewById(R.id.btn_filtre_alcool_fort);
+        btn_filtre_alcool_doux = (Button) findViewById(R.id.btn_filtre_alcool_doux);
+        btn_filtre_soft = (Button) findViewById(R.id.btn_filtre_soft);
+
+        btn_filtre_alcool_fort.setOnClickListener(click_btn_filtre);
+        btn_filtre_alcool_doux.setOnClickListener(click_btn_filtre);
+        btn_filtre_soft.setOnClickListener(click_btn_filtre);
 
         //TODO récupérer l'identifiant à partir de la connexion NFC
 

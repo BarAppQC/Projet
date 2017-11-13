@@ -30,6 +30,32 @@
                 android:textAllCaps="false" />
         </TableRow>
 
+        <TableRow>
+            <Button
+                android:id="@+id/btn_filtre_alcool_fort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="33"
+                android:text="Forts"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btn_filtre_alcool_doux"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="33"
+                android:text="Doux"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btn_filtre_soft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="33"
+                android:text="Softs"
+                android:textAllCaps="false"/>
+        </TableRow>
+
         <ScrollView>
 
             <TableLayout

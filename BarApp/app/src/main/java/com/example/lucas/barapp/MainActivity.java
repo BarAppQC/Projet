@@ -882,7 +882,6 @@ public class MainActivity extends AppCompatActivity {
                 vignette.addView(taux_alcool);
 
                 layout_boissons.addView(vignette);
-                i++;
             } else if (leFiltre.equals("fort") && boisson.isAlcoolFort()) {
                 // regroupe image et description
                 TableRow vignette = new TableRow(this);
@@ -918,7 +917,6 @@ public class MainActivity extends AppCompatActivity {
                 vignette.addView(taux_alcool);
 
                 layout_boissons.addView(vignette);
-                i++;
             } else if (leFiltre.equals("doux") && boisson.isAlcoolDoux()) {
                 // regroupe image et description
                 TableRow vignette = new TableRow(this);
@@ -954,7 +952,6 @@ public class MainActivity extends AppCompatActivity {
                 vignette.addView(taux_alcool);
 
                 layout_boissons.addView(vignette);
-                i++;
             } else if (leFiltre.equals("soft") && boisson.isSoft()) {
                 // regroupe image et description
                 TableRow vignette = new TableRow(this);
@@ -990,8 +987,8 @@ public class MainActivity extends AppCompatActivity {
                 vignette.addView(taux_alcool);
 
                 layout_boissons.addView(vignette);
-                i++;
             }
+            i++;
 
         }
     }
