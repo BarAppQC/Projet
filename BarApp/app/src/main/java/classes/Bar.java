@@ -6,16 +6,18 @@ package classes;
 
 public class Bar {
 
+    public long id;
     public String nom;
     public String adresse;
-    public String coordonneesGPS;
-    public String photo;
+    public Double latitude;
+    public Double longitude;
 
-    public Bar(String p_nom, String p_adresse,String p_coord,String p_photo){
+    public Bar(long p_id, String p_nom, String p_adresse, Double p_lat, Double p_long){
+        this.id=p_id;
         this.nom=p_nom;
         this.adresse=p_adresse;
-        this.coordonneesGPS=p_coord;
-        this.photo=p_photo;
+        this.latitude=p_lat;
+        this.longitude=p_long;
     }
 
 }

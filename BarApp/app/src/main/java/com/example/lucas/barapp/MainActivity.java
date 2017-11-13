@@ -1,8 +1,12 @@
 package com.example.lucas.barapp;
 
+import android.*;
+import android.Manifest;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,12 +14,20 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareUltralight;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -40,6 +52,12 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.login.widget.ProfilePictureView;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -65,7 +83,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
+import classes.Bar;
 import classes.Boisson;
 import classes.Evenement;
 import classes.MifareUltralightTagTester;
@@ -73,7 +95,7 @@ import classes.Utilisateur;
 
 import static com.facebook.Profile.getCurrentProfile;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
     //region VARIABLES
 
     private static final String TAG = MifareUltralightTagTester.class.getSimpleName();
@@ -231,6 +253,15 @@ public class MainActivity extends AppCompatActivity {
     //endregion EVENEMENT
 
     //region TEAM
+    private GoogleMap map;
+    private double longitude = 0D;
+    private double latitude = 0D;
+    private LatLng p0 = new LatLng(0D, 0D);
+
+    /**
+     * Permet la récupération des bars ajoutés en base de données
+     */
+    Bar bar;
 
     //endregion TEAM
 
@@ -1323,7 +1354,50 @@ public class MainActivity extends AppCompatActivity {
         //endregion CONNEXION*/
 
         toast_trop_argent = Toast.makeText(getApplicationContext(), "Vous ne pouvez pas mettre plus d'argent...", Toast.LENGTH_SHORT);
+
+        // Affichage de la map sur la page d'accueil
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        //Acceptation pour utiliser le gps
+        try {
+            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 2000, (float) 10, locationListener);
+        } catch (SecurityException e) {
+
+        }
     }
+
+        //Calcul de la position de l'utilisateur
+        final LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                p0 = new LatLng(latitude, longitude);
+                map.addMarker(new MarkerOptions().position(p0).title("Vous êtes ici"));
+                map.moveCamera(CameraUpdateFactory.newLatLng(p0));
+                // Zoom sur la position au lancement de la carte
+                float zoomLevel = 16.0f;
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(p0, zoomLevel));
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
+
 
     public void onNewIntent(Intent intent) {
         Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -1352,4 +1426,32 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
+
+    // Permet l'affichage de la positon du téléphone et des bars
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        //sorting and searching
+        final DatabaseReference myRef = database.getReference("bars");
+        Query query = myRef.orderByChild("id");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                    bar = new Bar((Long) messageSnapshot.child("id").getValue(), (String) messageSnapshot.child("nom").getValue(), (String) messageSnapshot.child("adresse").getValue(), (Double) messageSnapshot.child("latitude").getValue(), (Double) messageSnapshot.child("longitude").getValue());
+                    LatLng bar1 = new LatLng(bar.latitude,bar.longitude );
+                    //affichage d'un marqueur avec nom et adresse du bar
+                    map.addMarker(new MarkerOptions().position(bar1).title(bar.nom).snippet(bar.adresse));
+                    map.moveCamera(CameraUpdateFactory.newLatLng(bar1));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "select cancelled", Toast.LENGTH_LONG);
+            }
+        });
+        map = googleMap;
+    }
+
 }
