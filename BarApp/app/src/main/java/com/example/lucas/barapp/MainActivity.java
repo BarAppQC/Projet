@@ -529,8 +529,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             view_paiement.setVisibility(View.GONE);
             view_team.setVisibility(View.GONE);
 
-         //   if (utilisateur == null || aMontrer == view_connexion) {
-            if ( aMontrer == view_connexion) {
+            if (utilisateur == null || aMontrer == view_connexion) {
                 view_connexion.setVisibility(View.VISIBLE);
             } else if (aMontrer == view_accueil) {
                 view_accueil.setVisibility(View.VISIBLE);
@@ -565,6 +564,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 LoginManager.getInstance().logOut();
+                utilisateur=null;
                 connexion_layout_donnees_fb.setVisibility(View.GONE);
                 showView(view_connexion);
             }
@@ -638,7 +638,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 Profile user = Profile.getCurrentProfile();
-                selectUtilisateur("06bca15d-3c10-4e12-8565-2757461b16cd");
                 if (user != null) {
                     selectUtilisateur(user.getId());
                     connexion_txt_erreur.setVisibility(View.GONE);
@@ -723,8 +722,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         validerPaiement= (Button) view_paiement.findViewById(R.id.paiement_valider);
         mEdit = (EditText) view_paiement.findViewById(R.id.paiement_perso);
         lienPlus = (ImageView) findViewById(R.id.plusPointArgent);
-
-        selectUtilisateur("06bca15d-3c10-4e12-8565-2757461b16cd");
 
         cinqDollar.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -1334,11 +1331,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //endregion BOISSON
 
         // initialisation des vues
-        //initializeViewConnexion();
+        initializeViewConnexion();
         initializeViewAccueil();
         initializeViewPaiement();
 
-        /*
+
         //region CONNEXION
         // Si aucun utilisateur n'est connecté, on affiche la fenêtre de connexion
         Profile user = Profile.getCurrentProfile();
@@ -1348,7 +1345,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             selectUtilisateur(user.getId());
             //   accueil_txt_nomprenom.setText(utilisateur.nom+""+utilisateur.prenom);
         }
-        //endregion CONNEXION*/
+        //endregion CONNEXION
 
         toast_trop_argent = Toast.makeText(getApplicationContext(), "Vous ne pouvez pas mettre plus d'argent...", Toast.LENGTH_SHORT);
 
