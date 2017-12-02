@@ -6,6 +6,8 @@ package classes;
 
 public class Commande {
 
+
+    //region PROPRIETES
     /**
      * L'identifiant unique de la commande
      */
@@ -26,6 +28,12 @@ public class Commande {
      */
     private Utilisateur client;
 
+    private String id_cocktail;
+
+    private String nom;
+
+    private int id_commande;
+
     /**
      * Coefficients d'importance des types de boisson afin de déterminer l'importance de chaque
      * boisson
@@ -33,13 +41,36 @@ public class Commande {
     private final double COEFF_ALCOOL_FORT = 5;
     private final double COEFF_ALCOOL_DOUX = 2.5;
     private final double COEFF_SOFT = 1;
+    //endregion PROPRIETES
 
-    public Commande(Boisson b, int quantite, Utilisateur u) {
+    //region CONSTRUCTEUR
+    public Commande(Boisson b, int quantite, Utilisateur u, String id_cocktail, String nom, int id_commande) {
         this.boisson_commande = b;
         this.quantite_commande = quantite;
         this.client = u;
+        this.id_cocktail = id_cocktail;
+        this.nom = nom;
+        this.id_commande = id_commande;
+    }
+    //endregion CONSTRUCTEUR
+
+    //region FONCTIONS
+
+    public boolean isCommun() {
+        try {
+            Integer.parseInt(this.id_cocktail);
+
+            // les cocktails en commun ont un identifiant de type entier
+            return true;
+        } catch (Exception e) {
+            // alors que ceux des utilisateurs possèdent l'id de l'utilisateur
+            return false;
+        }
     }
 
+    //endregion FONCTIONS
+
+    //region ACCESSEURS
     public Boisson getBoisson_commande() {
         return boisson_commande;
     }
@@ -64,7 +95,6 @@ public class Commande {
         this.quantite_commande = q;
     }
 
-
     public Utilisateur getClient() {
         return client;
     }
@@ -72,5 +102,31 @@ public class Commande {
     public void setClient(Utilisateur client) {
         this.client = client;
     }
+
+    public String getIdCocktail() {
+        return id_cocktail;
+    }
+
+    public void setIdCocktail(String i) {
+        this.id_cocktail = i;
+    }
+
+    public String getNom() {
+        return this.nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public int getIdCommande() {
+        return this.id_commande;
+    }
+
+    public void setIdCommande(int id_commande) {
+        this.id_commande = id_commande;
+    }
+
+    //endregion ACCESSEURS
 
 }

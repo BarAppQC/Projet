@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.lucas.barappmachine.MainActivity">
 
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,44 +31,99 @@
                 android:textAllCaps="false" />
         </TableRow>
 
-        <TableRow>
-            <Button
-                android:id="@+id/btn_filtre_alcool_fort"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="33"
-                android:text="Forts"
-                android:textAllCaps="false"/>
+        <TableLayout
+            android:id="@+id/cocktails"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="34">
 
-            <Button
-                android:id="@+id/btn_filtre_alcool_doux"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="33"
-                android:text="Doux"
-                android:textAllCaps="false"/>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_filtre_cocktails_precomposes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Précomposés"
+                    android:textAllCaps="false"/>
 
-            <Button
-                android:id="@+id/btn_filtre_soft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="33"
-                android:text="Softs"
-                android:textAllCaps="false"/>
-        </TableRow>
+                <Button
+                    android:id="@+id/btn_filtre_cocktails_personnalises"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Personnalisés"
+                    android:textAllCaps="false"/>
 
-        <ScrollView>
+                <Button
+                    android:id="@+id/btn_filtre_cocktails_autres_utilisateurs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Autres utilisateurs"
+                    android:textAllCaps="false"/>
+            </TableRow>
 
-            <TableLayout
-                android:id="@+id/liste_boissons_cocktails"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:stretchColumns="1">
+            <ScrollView>
 
-            </TableLayout>
-        </ScrollView>
+                <TableLayout
+                    android:id="@+id/liste_cocktails"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:stretchColumns="1">
+
+                </TableLayout>
+            </ScrollView>
+
+        </TableLayout>
+
+        <TableLayout
+            android:id="@+id/boissons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="34">
+
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_filtre_alcool_fort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Forts"
+                    android:textAllCaps="false"/>
+
+                <Button
+                    android:id="@+id/btn_filtre_alcool_doux"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Doux"
+                    android:textAllCaps="false"/>
+
+                <Button
+                    android:id="@+id/btn_filtre_soft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Softs"
+                    android:textAllCaps="false"/>
+            </TableRow>
+
+            <ScrollView>
+
+                <TableLayout
+                    android:id="@+id/liste_boissons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:stretchColumns="1">
+
+                </TableLayout>
+            </ScrollView>
+
+        </TableLayout>
 
     </TableLayout>
+
+
 
     <TableLayout
         android:layout_width="match_parent"

@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Paint</string>
+    <string name="start_new">New</string>
+    <string name="brush">Brush</string>
+    <string name="erase">Erase</string>
+    <string name="save">Save</string>
+    <string name="paint">Paint</string>
+    <string name="retour">Retour arrière</string>
+    <string name="aller">Revenir</string>
+    <string name="ouvrir">Ouvrir</string>
+    <string name="appareil_photo">Ouvrir l\'appareil photo</string>
+    <string name="shlick_camera">Prendre une photo</string>
+    <string name="switch_camera">Changer l\appareil photo</string>
+    <string name="rotate">Faire tourner l\'image de 90 degrés</string>
+
+    <string name="vsml">Very small</string>
+    <string name="sml">Small</string>
+    <string name="med">Medium</string>
+    <string name="lrg">Large</string>
+    <string name="vlrg">Very large</string>
+
+</resources>
